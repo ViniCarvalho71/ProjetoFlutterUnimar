@@ -99,7 +99,7 @@ class AppDrawer extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 22),
               child: Text(
-                'ConectaSTI Backend',
+                'ConectaSTI © 2026',
                 style: TextStyle(
                   color: Color(0xFF98A2B3),
                   fontSize: 12,
