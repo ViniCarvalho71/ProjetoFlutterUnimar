@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/features/core/DI/injection.dart';
-import 'conectaApp.dart';
+import 'conecta_app.dart';
 
 void main() {
   setupDependencies();
-  runApp(ConectaApp());
+  runApp(const ConectaApp());
 }

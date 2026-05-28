@@ -10,6 +10,8 @@ import '../widgets/rotas/rota_detail_sheet.dart';
 import '../widgets/rotas/total_rotas_badge.dart';
 
 class RotasScreen extends StatefulWidget {
+  const RotasScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _RotasScreenState();
@@ -52,12 +54,11 @@ class _RotasScreenState extends State<RotasScreen> {
         _rotas = [];
       });
     } finally {
-      if (!mounted) {
-        return;
+      if (mounted) {
+        setState(() {
+          _carregando = false;
+        });
       }
-      setState(() {
-        _carregando = false;
-      });
     }
   }
 
@@ -131,10 +132,7 @@ class _RotasScreenState extends State<RotasScreen> {
       appBar: AppBar(
         title: const Text(
           'Rotas',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF005BEA),

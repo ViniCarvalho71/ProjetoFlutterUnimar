@@ -17,10 +17,12 @@ class RotaDataSourceImpl implements RotaDataSource {
         final List<dynamic> data = response.data;
         return data.map((item) => Rotas.fromMap(item)).toList();
       } else {
-        throw ConectastiException('Erro ao buscar rotas: ${response.statusCode}');
+        throw ConectastiException(
+          'Erro ao buscar rotas: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
-      throw ConectastiException('Erro ao buscar rotas');
+      throw ConectastiException('Erro ao buscar rotas: ${e.message}');
     }
   }
 }

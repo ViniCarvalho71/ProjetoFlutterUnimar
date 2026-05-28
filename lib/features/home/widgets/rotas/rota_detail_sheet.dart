@@ -154,7 +154,10 @@ class RotaDetailSheet extends StatelessWidget {
                 navigator.pop();
                 navigator.push(
                   MaterialPageRoute(
-                    builder: (context) => DiagramaFluxoScreen(),
+                    builder: (context) => DiagramaFluxoScreen(
+                      fluxoId: rota.pipelineVersaoId,
+                      titulo: tituloRota(rota),
+                    ),
                   ),
                 );
               },
@@ -173,11 +176,7 @@ class _BlocoDetalhe extends StatelessWidget {
   final String? titulo;
   final IconData? iconeTitulo;
 
-  const _BlocoDetalhe({
-    required this.children,
-    this.titulo,
-    this.iconeTitulo,
-  });
+  const _BlocoDetalhe({required this.children, this.titulo, this.iconeTitulo});
 
   @override
   Widget build(BuildContext context) {
@@ -267,10 +266,12 @@ class _LinhaInfo extends StatelessWidget {
             flex: 6,
             child: Align(
               alignment: Alignment.centerRight,
-              child: valorWidget ?? _TextoValorInfo(
-                valor: valorOuTraco(valor ?? ''),
-                linhaUnica: valorEmLinhaUnica,
-              ),
+              child:
+                  valorWidget ??
+                  _TextoValorInfo(
+                    valor: valorOuTraco(valor ?? ''),
+                    linhaUnica: valorEmLinhaUnica,
+                  ),
             ),
           ),
         ],
@@ -283,10 +284,7 @@ class _TextoValorInfo extends StatelessWidget {
   final String valor;
   final bool linhaUnica;
 
-  const _TextoValorInfo({
-    required this.valor,
-    required this.linhaUnica,
-  });
+  const _TextoValorInfo({required this.valor, required this.linhaUnica});
 
   @override
   Widget build(BuildContext context) {
@@ -310,11 +308,7 @@ class _TextoValorInfo extends StatelessWidget {
       );
     }
 
-    return Text(
-      valor,
-      textAlign: TextAlign.right,
-      style: estilo,
-    );
+    return Text(valor, textAlign: TextAlign.right, style: estilo);
   }
 }
 

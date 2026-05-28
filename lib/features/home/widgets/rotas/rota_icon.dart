@@ -7,10 +7,11 @@ class RotaIcon extends StatelessWidget {
   final double tamanho;
   final double tamanhoIcone;
 
-  const RotaIcon({super.key,
+  const RotaIcon({
+    super.key,
     required this.visual,
     this.tamanho = 76,
-    this.tamanhoIcone = 34
+    this.tamanhoIcone = 34,
   });
 
   @override
@@ -19,12 +20,10 @@ class RotaIcon extends StatelessWidget {
       width: tamanho,
       height: tamanho,
       decoration: BoxDecoration(
-        color: visual.cor.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20)),
-      child: Icon(
-        visual.icone,
-        size: tamanhoIcone,
-        color: visual.cor),
+        color: visual.cor.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Icon(visual.icone, size: tamanhoIcone, color: visual.cor),
     );
   }
 }
