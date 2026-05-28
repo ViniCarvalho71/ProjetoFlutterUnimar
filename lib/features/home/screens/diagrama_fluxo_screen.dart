@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/features/core/DI/injection.dart';
+import 'package:myapp/features/home/datasource/fluxo/fluxo_datasource.dart';
 
-class DiagramaFluxoScreen extends StatelessWidget {
-  const DiagramaFluxoScreen({super.key});
+class DiagramaFluxoScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _DiagramaFluxoScreenState();
+  }
+}
+
+class _DiagramaFluxoScreenState extends State<DiagramaFluxoScreen> {
+
+  final FluxoDatasource _fluxoDatasource = getIt<FluxoDatasource>();
+
+  @override
+  void initState() {
+    super.initState();
+    _fluxoDatasource.getNosByFluxoId(1);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F8FC),
       appBar: AppBar(
-        title: const Text(
-          'Diagrama fluxo',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: const Color(0xFF005BEA),
+        title: Text('Diagrama de Fluxo'),
       ),
-      body: const Center(
-        child: Text('Aqui Mauricio'),
+      body: Center(
+        child: Text('Aqui será exibido o diagrama de fluxo'),
       ),
     );
   }

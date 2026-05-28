@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../screens/diagrama_fluxo_screen.dart';
 import '../../models/rotas.dart';
-import '../../../shared/services/date_service.dart';
+import '../../../core/services/date_service.dart';
 import 'rota_badges.dart';
 import 'rota_icon.dart';
 import 'rota_visual.dart';
@@ -154,7 +154,7 @@ class RotaDetailSheet extends StatelessWidget {
                 navigator.pop();
                 navigator.push(
                   MaterialPageRoute(
-                    builder: (context) => const DiagramaFluxoScreen(),
+                    builder: (context) => DiagramaFluxoScreen(),
                   ),
                 );
               },

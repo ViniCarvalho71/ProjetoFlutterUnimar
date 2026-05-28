@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/features/core/DI/injection.dart';
+import 'package:myapp/features/core/widgets/app_drawer.dart';
+import 'package:myapp/features/home/datasource/rota/rota_datasource.dart';
 
 import '../models/rotas.dart';
-import '../services/rota_service.dart';
 import '../widgets/rotas/estado_rotas_view.dart';
 import '../widgets/rotas/rota_card.dart';
 import '../widgets/rotas/rota_detail_sheet.dart';
 import '../widgets/rotas/total_rotas_badge.dart';
-import '../../shared/widgets/app_drawer.dart';
 
 class RotasScreen extends StatefulWidget {
   @override
@@ -19,6 +20,8 @@ class _RotasScreenState extends State<RotasScreen> {
   List<Rotas> _rotas = [];
   bool _carregando = false;
   String _erro = '';
+
+  final RotaDataSource _rotaDataSource = getIt<RotaDataSource>();
 
   @override
   void initState() {
@@ -33,7 +36,7 @@ class _RotasScreenState extends State<RotasScreen> {
     });
 
     try {
-      final rotasApi = await RotaService.obterRotas();
+      final rotasApi = await _rotaDataSource.getRotas();
       if (!mounted) {
         return;
       }

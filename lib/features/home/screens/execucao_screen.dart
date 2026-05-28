@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/widgets/app_drawer.dart';
+import '../../core/widgets/app_drawer.dart';
 
 class ExecucaoScreen extends StatelessWidget {
   const ExecucaoScreen({super.key});
