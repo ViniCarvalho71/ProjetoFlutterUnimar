@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/features/core/DI/injection.dart';
+import 'package:myapp/features/core/widgets/app_drawer.dart';
 import 'package:myapp/features/home/datasource/log_fluxo/log_fluxo_datasource.dart';
+import 'package:myapp/features/home/models/log_fluxo_filtro_model.dart';
 import 'package:myapp/features/home/models/log_fluxo_model.dart';
 import 'package:myapp/features/home/widgets/diagrama_fluxo/diagrama_state_message.dart';
+import 'package:myapp/features/home/widgets/log_fluxo/log_fluxo_filtro.dart';
 import 'package:myapp/features/home/widgets/log_fluxo/log_fluxo_listview.dart';
-
-import '../../core/widgets/app_drawer.dart';
 
 class ExecucaoScreen extends StatefulWidget {
   const ExecucaoScreen({super.key});
@@ -15,14 +16,51 @@ class ExecucaoScreen extends StatefulWidget {
 }
 
 class _ExecucaoScreenState extends State<ExecucaoScreen> {
-  final LogFluxoDatasource _datasource = getIt<LogFluxoDatasource>();
+  final LogFluxoDatasource _datasource =
+      getIt<LogFluxoDatasource>();
 
   late final Future<List<LogFluxoModel>> _logsFuture;
+
+  List<LogFluxoModel> _todosLogs = [];
+  List<LogFluxoModel> _logsFiltrados = [];
 
   @override
   void initState() {
     super.initState();
     _logsFuture = _datasource.getLogs();
+  }
+
+  void _aplicarFiltro(LogFluxoFiltroModel filtro) {
+    setState(() {
+      _logsFiltrados = _todosLogs.where((log) {
+        final nomeOk = log.nome
+            .toLowerCase()
+            .contains(filtro.pesquisa.toLowerCase());
+
+        final dataExecucao =
+            log.iniciadoEm ?? log.criadoEm;
+
+        final dataInicialOk =
+            filtro.dataInicial == null ||
+            (dataExecucao != null &&
+                !dataExecucao.isBefore(
+                  filtro.dataInicial!,
+                ));
+
+        final dataFinalOk =
+            filtro.dataFinal == null ||
+            (dataExecucao != null &&
+                !dataExecucao.isAfter(
+                  filtro.dataFinal!.add(
+                    const Duration(days: 1),
+                  ),
+                ));
+
+        return nomeOk &&
+            dataInicialOk &&
+            dataFinalOk;
+      }).toList();
+    });
   }
 
   @override
@@ -37,7 +75,9 @@ class _ExecucaoScreenState extends State<ExecucaoScreen> {
             color: Colors.white,
           ),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: const Color(0xFF005BEA),
       ),
       drawer: const AppDrawer(
@@ -74,8 +114,23 @@ class _ExecucaoScreenState extends State<ExecucaoScreen> {
             );
           }
 
-          return LogFluxoListView(
-            logs: logs,
+          if (_todosLogs.isEmpty) {
+            _todosLogs = logs;
+            _logsFiltrados = logs;
+          }
+
+          return Column(
+            children: [
+              LogFluxoFiltro(
+                onChanged: _aplicarFiltro,
+              ),
+
+              Expanded(
+                child: LogFluxoListView(
+                  logs: _logsFiltrados,
+                ),
+              ),
+            ],
           );
         },
       ),
