@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/features/home/models/diagrama_no_model.dart';
-
+import 'diagrama_node_modal.dart';
 import 'diagrama_mini_badge.dart';
 import 'diagrama_visual.dart';
 
@@ -30,7 +30,48 @@ class DiagramaNodeCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       elevation: 0,
       child: InkWell(
-        onTap: () {print('ola meu chapa');},
+        onTap: () {
+          showGeneralDialog(
+            context: context,
+            barrierDismissible: true,
+            barrierLabel: 'Fechar',
+            barrierColor: Colors.black54,
+            transitionDuration: const Duration(
+              milliseconds: 250,
+            ),
+
+            pageBuilder: (_, __, ___) {
+              return DiagramaNodeModal(
+                diagramaNo: diagramaNo,
+              );
+            },
+
+            transitionBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(
+                opacity: animation,
+
+                child: ScaleTransition(
+                  scale: Tween<double>(
+                    begin: 0.92,
+                    end: 1.0,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
+
+                  child: child,
+                ),
+              );
+            },
+          );
+        },
         borderRadius: BorderRadius.circular(16),
         child: Ink(
           width: width,
