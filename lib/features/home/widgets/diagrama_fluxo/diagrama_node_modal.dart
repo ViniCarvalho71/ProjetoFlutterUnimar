@@ -36,19 +36,20 @@ Widget _info(String titulo, String valor) {
 Widget build(BuildContext context) {
   final color = tipoNoColor(diagramaNo.no.tipo);
 
-  return Dialog(
+  return SafeArea(
+    child: Dialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(24),
     ),
     child: Container(
-      constraints: const BoxConstraints(
+      constraints: BoxConstraints(
         maxWidth: 500,
+        maxHeight: MediaQuery.of(context).size.height * 0.75,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
 
-          /// CABEÇALHO
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -114,7 +115,6 @@ Widget build(BuildContext context) {
             ),
           ),
 
-          /// CONTEÚDO
           Flexible(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
@@ -227,7 +227,6 @@ Widget build(BuildContext context) {
             ),
           ),
 
-          /// BOTÃO
           Padding(
             padding: const EdgeInsets.all(16),
             child: Align(
@@ -243,6 +242,6 @@ Widget build(BuildContext context) {
         ],
       ),
     ),
-  );
+  ));
 }
 }
