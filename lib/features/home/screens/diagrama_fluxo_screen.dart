@@ -42,44 +42,46 @@ class _DiagramaFluxoScreenState extends State<DiagramaFluxoScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF005BEA),
       ),
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Color(0xFFF6F8FC),
-          gradient: RadialGradient(
-            center: Alignment.topLeft,
-            radius: 1.1,
-            colors: [Color(0xFFEAF2FF), Color(0xFFF6F8FC)],
+      body: SafeArea(
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            color: Color(0xFFF6F8FC),
+            gradient: RadialGradient(
+              center: Alignment.topLeft,
+              radius: 1.1,
+              colors: [Color(0xFFEAF2FF), Color(0xFFF6F8FC)],
+            ),
           ),
-        ),
-        child: FutureBuilder<List<DiagramaNoModel>>(
-          future: _nosFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          child: FutureBuilder<List<DiagramaNoModel>>(
+            future: _nosFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (snapshot.hasError) {
-              return Center(
-                child: DiagramaStateMessage(
-                  icon: Icons.cloud_off_outlined,
-                  title: 'Erro ao carregar diagrama',
-                  detail: snapshot.error.toString(),
-                ),
-              );
-            }
+              if (snapshot.hasError) {
+                return Center(
+                  child: DiagramaStateMessage(
+                    icon: Icons.cloud_off_outlined,
+                    title: 'Erro ao carregar diagrama',
+                    detail: snapshot.error.toString(),
+                  ),
+                );
+              }
 
-            final nos = snapshot.data ?? const [];
-            if (nos.isEmpty) {
-              return const Center(
-                child: DiagramaStateMessage(
-                  icon: Icons.account_tree_outlined,
-                  title: 'Fluxo vazio',
-                ),
-              );
-            }
+              final nos = snapshot.data ?? const [];
+              if (nos.isEmpty) {
+                return const Center(
+                  child: DiagramaStateMessage(
+                    icon: Icons.account_tree_outlined,
+                    title: 'Fluxo vazio',
+                  ),
+                );
+              }
 
-            return DiagramaCanvas(nos: nos);
-          },
+              return DiagramaCanvas(nos: nos);
+            },
+          ),
         ),
       ),
     );

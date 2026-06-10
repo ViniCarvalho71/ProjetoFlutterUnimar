@@ -16,8 +16,7 @@ class ExecucaoScreen extends StatefulWidget {
 }
 
 class _ExecucaoScreenState extends State<ExecucaoScreen> {
-  final LogFluxoDatasource _datasource =
-      getIt<LogFluxoDatasource>();
+  final LogFluxoDatasource _datasource = getIt<LogFluxoDatasource>();
 
   late final Future<List<LogFluxoModel>> _logsFuture;
 
@@ -33,32 +32,25 @@ class _ExecucaoScreenState extends State<ExecucaoScreen> {
   void _aplicarFiltro(LogFluxoFiltroModel filtro) {
     setState(() {
       _logsFiltrados = _todosLogs.where((log) {
-        final nomeOk = log.nome
-            .toLowerCase()
-            .contains(filtro.pesquisa.toLowerCase());
+        final nomeOk = log.nome.toLowerCase().contains(
+          filtro.pesquisa.toLowerCase(),
+        );
 
-        final dataExecucao =
-            log.iniciadoEm ?? log.criadoEm;
+        final dataExecucao = log.iniciadoEm ?? log.criadoEm;
 
         final dataInicialOk =
             filtro.dataInicial == null ||
             (dataExecucao != null &&
-                !dataExecucao.isBefore(
-                  filtro.dataInicial!,
-                ));
+                !dataExecucao.isBefore(filtro.dataInicial!));
 
         final dataFinalOk =
             filtro.dataFinal == null ||
             (dataExecucao != null &&
                 !dataExecucao.isAfter(
-                  filtro.dataFinal!.add(
-                    const Duration(days: 1),
-                  ),
+                  filtro.dataFinal!.add(const Duration(days: 1)),
                 ));
 
-        return nomeOk &&
-            dataInicialOk &&
-            dataFinalOk;
+        return nomeOk && dataInicialOk && dataFinalOk;
       }).toList();
     });
   }
@@ -70,69 +62,55 @@ class _ExecucaoScreenState extends State<ExecucaoScreen> {
       appBar: AppBar(
         title: const Text(
           'Execução',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF005BEA),
       ),
-      drawer: const AppDrawer(
-        paginaAtual: 'execucao',
-      ),
-      body: FutureBuilder<List<LogFluxoModel>>(
-        future: _logsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      drawer: const AppDrawer(paginaAtual: 'execucao'),
+      body: SafeArea(
+        child: FutureBuilder<List<LogFluxoModel>>(
+          future: _logsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: DiagramaStateMessage(
-                icon: Icons.error_outline,
-                title: 'Erro ao carregar execuções',
-                detail: snapshot.error.toString(),
-              ),
-            );
-          }
-
-          final logs = snapshot.data ?? const [];
-
-          if (logs.isEmpty) {
-            return const Center(
-              child: DiagramaStateMessage(
-                icon: Icons.history_toggle_off,
-                title: 'Nenhuma execução encontrada',
-              ),
-            );
-          }
-
-          if (_todosLogs.isEmpty) {
-            _todosLogs = logs;
-            _logsFiltrados = logs;
-          }
-
-          return Column(
-            children: [
-              LogFluxoFiltro(
-                onChanged: _aplicarFiltro,
-              ),
-
-              Expanded(
-                child: LogFluxoListView(
-                  logs: _logsFiltrados,
+            if (snapshot.hasError) {
+              return Center(
+                child: DiagramaStateMessage(
+                  icon: Icons.error_outline,
+                  title: 'Erro ao carregar execuções',
+                  detail: snapshot.error.toString(),
                 ),
-              ),
-            ],
-          );
-        },
+              );
+            }
+
+            final logs = snapshot.data ?? const [];
+
+            if (logs.isEmpty) {
+              return const Center(
+                child: DiagramaStateMessage(
+                  icon: Icons.history_toggle_off,
+                  title: 'Nenhuma execução encontrada',
+                ),
+              );
+            }
+
+            if (_todosLogs.isEmpty) {
+              _todosLogs = logs;
+              _logsFiltrados = logs;
+            }
+
+            return Column(
+              children: [
+                LogFluxoFiltro(onChanged: _aplicarFiltro),
+
+                Expanded(child: LogFluxoListView(logs: _logsFiltrados)),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

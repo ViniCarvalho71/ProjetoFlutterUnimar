@@ -12,17 +12,13 @@ class IntegracoesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Integracoes',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF005BEA),
       ),
       drawer: const AppDrawer(paginaAtual: 'integracoes'),
-      body: const Center(
-        child: Text('aqui viniMiles'),)
+      body: const SafeArea(child: Center(child: Text('aqui viniMiles'))),
     );
   }
 }

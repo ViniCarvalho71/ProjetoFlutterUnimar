@@ -138,9 +138,11 @@ class _RotasScreenState extends State<RotasScreen> {
         backgroundColor: const Color(0xFF005BEA),
       ),
       drawer: const AppDrawer(paginaAtual: 'rotas'),
-      body: RefreshIndicator(
-        onRefresh: _atualizarLista,
-        child: _montarConteudo(),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _atualizarLista,
+          child: _montarConteudo(),
+        ),
       ),
     );
   }
