@@ -28,7 +28,9 @@ class RotaDetailSheet extends StatelessWidget {
       ),
       child: ListView(
         controller: scrollController,
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 28),
+        padding: EdgeInsets.fromLTRB( 24, 12, 24, 
+        MediaQuery.of(context) // pega informação do dispositivo para ajustar o safe area
+        .padding.bottom + 28),
         children: [
           Center(
             child: Container(

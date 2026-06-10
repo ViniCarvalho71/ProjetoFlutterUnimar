@@ -4,6 +4,7 @@ import 'package:myapp/features/core/widgets/app_drawer.dart';
 import 'package:myapp/features/home/datasource/rota/rota_datasource.dart';
 
 import '../models/rotas.dart';
+import '../widgets/rotas/barra_pesquisa.dart';
 import '../widgets/rotas/estado_rotas_view.dart';
 import '../widgets/rotas/rota_card.dart';
 import '../widgets/rotas/rota_detail_sheet.dart';
@@ -19,6 +20,9 @@ class RotasScreen extends StatefulWidget {
 }
 
 class _RotasScreenState extends State<RotasScreen> {
+  final TextEditingController _pesquisaController = TextEditingController();
+
+  String _pesquisa = '';
   List<Rotas> _rotas = [];
   bool _carregando = false;
   String _erro = '';
@@ -38,17 +42,18 @@ class _RotasScreenState extends State<RotasScreen> {
     });
 
     try {
-      final rotasApi = await _rotaDataSource.getRotas();
-      if (!mounted) {
-        return;
-      }
+      final rotasApi = await _rotaDataSource.getRotas(
+        pesquisa: _pesquisa,
+      );
+
+      if (!mounted) return;
+
       setState(() {
         _rotas = rotasApi;
       });
     } catch (e) {
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
+
       setState(() {
         _erro = e.toString();
         _rotas = [];
@@ -85,6 +90,32 @@ class _RotasScreenState extends State<RotasScreen> {
   }
 
   Widget _montarConteudo() {
+    return Column(
+      children: [
+        BarraPesquisa(
+          controller: _pesquisaController,
+          termoPesquisa: _pesquisa,
+          onLimpar: () {
+            _pesquisaController.clear();
+             setState(() { _pesquisa = ''; });
+            _atualizarLista();
+          },
+          onPesquisar: (valor) {
+            setState(() {
+              _pesquisa = valor.trim();
+            });
+
+            _atualizarLista();
+          },
+        ),
+        Expanded(
+          child: _montarListaOuEstado(),
+        ),
+      ],
+    );
+  }
+
+  Widget _montarListaOuEstado() {
     if (_carregando) {
       return const EstadoRotasView.carregando();
     }
@@ -123,6 +154,12 @@ class _RotasScreenState extends State<RotasScreen> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _pesquisaController.dispose();
+    super.dispose();
   }
 
   @override

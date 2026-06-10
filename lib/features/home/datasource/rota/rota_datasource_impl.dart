@@ -9,20 +9,31 @@ class RotaDataSourceImpl implements RotaDataSource {
 
   RotaDataSourceImpl(this.apiClient);
 
-  @override
-  Future<List<Rotas>> getRotas() async {
-    try {
-      final response = await apiClient.dio.get('/api/Rota');
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        return data.map((item) => Rotas.fromMap(item)).toList();
-      } else {
-        throw ConectastiException(
-          'Erro ao buscar rotas: ${response.statusCode}',
-        );
-      }
-    } on DioException catch (e) {
-      throw ConectastiException('Erro ao buscar rotas: ${e.message}');
+@override
+Future<List<Rotas>> getRotas({String pesquisa = ''}) async {
+  try {
+    final queryParameters = <String, dynamic>{};
+
+    if (pesquisa.trim().isNotEmpty) {
+      queryParameters[r'$filter'] =
+          "contains(tolower(nome), '${pesquisa.trim().toLowerCase()}')";
     }
+
+    final response = await apiClient.dio.get(
+      '/api/Rota',
+      queryParameters: queryParameters,
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data;
+      return data.map((item) => Rotas.fromMap(item)).toList();
+    } else {
+      throw ConectastiException(
+        'Erro ao buscar rotas: ${response.statusCode}',
+      );
+    }
+  } on DioException catch (e) {
+    throw ConectastiException('Erro ao buscar rotas: ${e.message}');
   }
+}
 }
