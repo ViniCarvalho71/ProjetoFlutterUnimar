@@ -40,7 +40,7 @@ class DiagramaFlowLinesPainter extends CustomPainter {
           start.dy - 22,
           end.dx - gap * 0.35,
           end.dy + 22,
-          end.dx,
+          end.dx - 10,
           end.dy,
         );
 
